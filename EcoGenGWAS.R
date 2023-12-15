@@ -3,6 +3,59 @@
 
 # reading in files
 
+######## bash ##################
+
+# modified GEA script to run the GWAS final
+
+#mkdir ~/myresults/RSGWAS
+
+REF="/netfiles/ecogen/PopulationGenomics/ref_genome/Pabies1.0-genome_reduced.fa"
+
+SUFFIX="nc_s"
+
+#_s means that pop structure is accounted for  
+
+# Let's start with bio10; can do others as time permits...
+BIOVAR="budbreak_blups_nc.txt"
+
+# path to the red spruce bam files
+#INPUT="/netfiles/ecogen/PopulationGenomics/fastq/red_spruce/cleanreads/bam340"
+
+OUTPUT=~/myresults/ANGSD_GWAS2
+
+# make the bamlist files
+#ls ${INPUT} >${OUTPUT}/${SUFFIX}_bam.list
+
+
+# Run ANGSD to estimate the genotype probabilities and perform the GEA:
+
+ANGSD -b ${OUTPUT}/G2_budbreak_bam.list \
+-ref ${REF} -anc ${REF} \
+-out ${OUTPUT}/${SUFFIX}  \
+-nThreads 1 \
+-remove_bads 1 \
+-C 50 \
+-baq 1 \
+-minMapQ 20 \
+-minQ 20 \
+-GL 1 \
+-doCounts 1 \
+-minInd 47 \
+-setMinDepthInd 1 \
+-setMaxDepthInd 40 \
+-skipTriallelic 1 \
+-doMajorMinor 1 \
+-doMaf 1 \
+-SNP_pval 1e-6 \
+-minMaf 0.05 \
+-doPost 1 \
+-doAsso 5 \
+-yQuant /data/users/j/h/jhart12/mydata/${BIOVAR} \
+-cov /data/project_data/budbreak/allGL_genPC1_2.txt
+
+# gwas with pop structure accounted PCangsd and input at -cov
+######## bash ##################
+
 vt <- read.delim(file.choose("budbreak_blups_vt.txt"), header = FALSE)
 
 nc <- read.delim(file.choose("budbreak_blups_nc.txt"), header = FALSE)
